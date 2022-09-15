@@ -15,7 +15,7 @@ def home():
     if len(title) < 1:
       flash('Speech title is too short', category='error')
     else:
-      new_speech = Speech(title=title, data='', user_id=current_user.id)
+      new_speech = Speech(title=title, data='empty', user_id=current_user.id)
       db.session.add(new_speech)
       db.session.commit()
       flash('New Speech Created!', category='success')

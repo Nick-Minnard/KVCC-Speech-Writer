@@ -8,6 +8,8 @@
 # - Compare to previous version
 # - Create basic flask site with user auth
 # - Alert confirm speech delete
+# - No Introduction Labels
+# - HR separating sections
 
 from website import create_app
 

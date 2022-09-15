@@ -17,13 +17,20 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='editor_styles.css') }}">
     <title>Editor</title>
   </head>
-  <body>
+  <body onload="init();">
+
+    <input type="hidden" value="{{ speech.data }}" id="speech-data">
 
     <div class="sidebar">
       <a class="active" href="#">KVCC Speech Writer</a>
-      <a href="#">News</a>
-      <a href="#">Contact</a>
-      <a href="#">About</a>
+      <a href="#">Save Speech</a>
+      <a href="#">Download Doc</a>
+      <a href="#">Site Info</a>
+      <a href="#">Add Point</a>
+      <a href="#">Rename Point</a>
+      <a href="#">Shift Point</a>
+      <a href="#">Switch Sections</a>
+      <a href="#">Delete Point</a>
     </div>
 
     <div class="content">
@@ -41,6 +48,16 @@
           </div>
         </div>
       </nav>
+
+      <div class="container">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <button class="btn btn-secondary">Attention Getter</button>
+          </div>
+          <textarea class="form-control" rows="1" style="resize: none;"></textarea>
+        </div>
+      </div>
+
     </div>
 
     <script
@@ -61,6 +78,10 @@
     <script
       type="text/javascript"
       src="{{ url_for('static', filename='index.js') }}"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='editor.js') }}"
     ></script>
   </body>
 </html>
