@@ -64,4 +64,5 @@ def load_speech():
 def editor():
   if current_user.current_speech_id == None:
     return redirect("/")
-  return render_template("editor.html", user=current_user)
+  speech = Speech.query.get(current_user.current_speech_id)
+  return render_template("editor.html", user=current_user, speech=speech)
