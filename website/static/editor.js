@@ -97,7 +97,7 @@ function init() {
   // load starting template and generate points
   if($("#speech-data").attr("data-internalid") == "empty") {
     speech = DEFAULT_TEMPLATE;
-    render_speech_from_template(speech);
+    load_and_render();
   }
 
   // load speech data
@@ -179,7 +179,7 @@ function render_speech_from_template(template) {
           .addClass("btn btn-light")
 
           // name and prefix
-          .html(((p.prefix == "") ? "" : p.prefix + ". ") + p.name)
+          .html(((p.prefix == "") ? "" : p.prefix) + p.name)
         )
       )
       .append($(document.createElement("textarea"))
@@ -221,8 +221,116 @@ function add_option_functionality() {
 // update vals, reset speech points
 function load_and_render() {
   update_point_input_values();
+  regen_prefixes();
   clear_points_container();
   render_speech_from_template(speech);  
+}
+
+// go through each point and assign correct prefix
+function regen_prefixes() {
+
+  let tracker = [1, 1, 1, 1, 1]
+  let last_level = 0;
+  let last_section = 1;
+
+  speech.points.forEach(function(p) {
+
+    let this_level = p.level;
+
+    // reset on new section
+    if(last_section < p.section) {
+      tracker = [1, 1, 1, 1, 1];
+      last_section = p.section;
+    }
+
+    // handle non-mutable points which don't have prefixes
+    let mutable = true;
+    if(["Specific Purpose", "Internal Preview", "Internal Summary", "Transition"].includes(p.name)) {
+      mutable = false;
+    }
+    
+    if(!(mutable)) {
+      p.prefix = "";
+    } else {
+      p.prefix = getSymbol(tracker[this_level-1], this_level);
+    }
+
+    // staying on the same level or stepping down one level
+    if(last_level === this_level || last_level === this_level - 1) {
+      if(mutable) { tracker[this_level - 1]++; }
+    }
+
+    // stepping up one level
+    else if(last_level - 1 === this_level) {
+      if(mutable) { tracker[this_level - 1]++; }
+      tracker[this_level] = 1; // reset level that was stepped up from
+    }
+
+    // stepping up multiple levels
+    else if(last_level - 1 > this_level) {
+      if(this_level === 1) {
+        if(mutable) { tracker[0]++; }
+        tracker[1] = 1; tracker[2] = 1; tracker[3] = 1; tracker[4] = 1;
+      } else if(this_level === 2) {
+        if(mutable) { tracker[1]++; }
+        tracker[2] = 1; tracker[3] = 1; tracker[4] = 1;
+      } tracker[3], tracker[4] = 1, 1;
+
+    }
+
+    last_level = this_level;
+
+  })
+
+}
+
+// returns the correct symbol of a point given the sequence of the point and its level
+function getSymbol(number, level) {
+
+  // return roman numeral
+  if(level === 1 || level === 5) {
+    return romanize(number) + ". ";
+  }
+  
+  // return capital letter
+  else if(level === 2) {
+    if(number <= 26) { return String.fromCharCode(96 + number).toUpperCase() + ". "; }
+    else {
+      let first = String.fromCharCode(96 + Math.floor(number / 26)).toUpperCase()
+      let second = String.fromCharCode(96 + (number % 26)).toUpperCase()
+      return first + second + ". ";
+    }
+  }
+  
+  // return lowercase letter
+  else if(level === 4) {
+    if(number <= 26) { return String.fromCharCode(96 + number) + ". "; }
+    else {
+      let first = String.fromCharCode(96 + Math.floor(number / 26))
+      let second = String.fromCharCode(96 + (number % 26))
+      return first + second + ". ";
+    }
+  }
+  
+  // return number
+  else { return number + ". "; }
+
+}
+
+// get roman numeral prefixes
+function romanize (integer) {
+
+  // fancy method of converting integers to roman numerals I found from
+  // https://blog.stevenlevithan.com/archives/javascript-roman-numeral-converter
+  if(isNaN(integer)) {return NaN; }
+  let digits = String(+integer).split(""), roman = "", i = 3;
+  let key = ["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM",
+             "","X","XX","XXX","XL","L","LX","LXX","LXXX","XC",
+             "","I","II","III","IV","V","VI","VII","VIII","IX"];
+  while(i--) {
+    roman = (key[+digits.pop() + (i * 10)] || "") + roman; }
+  return Array(+digits.join("") + 1).join("M") + roman;
+
 }
 
 // shift down config
