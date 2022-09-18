@@ -1,5 +1,7 @@
+// Nick Minnard
 
-let speech_outline_template = {
+
+let DEFAULT_TEMPLATE = {
   points: [
     {name: "Specific Purpose", value: "", level: 1, prefix: "", index: 0, mutable: false, section: 1},
 
@@ -89,31 +91,208 @@ let speech_outline_template = {
 
 let speech = [];
 
+// initialize editor page
 function init() {
-  // initialize editor page
-  create_speech_outline();
+
+  // load starting template and generate points
+  if($("#speech-data").attr("data-internalid") == "empty") {
+    speech = DEFAULT_TEMPLATE;
+    render_speech_from_template(speech);
+  }
+
+  // load speech data
+  else {
+    return
+  }
+
+  add_option_functionality();
 
 }
 
+// wipe all elements from speech section
+function clear_points_container() {
+  $(".point-group").remove();
+  $(".section-divider").remove();
+}
 
-// expanding textarea
-// var textarea = jQuery('.textarea');
-// textarea.on("input", function () {
-//     jQuery(this).css("height", ""); //reset the height
-//     jQuery(this).css("height", Math.min(jQuery(this).prop('scrollHeight'), 200) + "px");
-// });
+// update textarea field values in speech object
+function update_point_input_values() {
+  $(".point-group").each(function() {
+    let i = $(this).find(".point-index").attr("data-index");
+    speech.points[i].value = $(this).find("textarea").val();
+  })
+}
 
-function create_speech_outline() {
-  // create speech point elements
+// name, value, level, prefix, index, mutable, section
+function render_speech_from_template(template) {
 
-  if($("#speech-data").value == "empty") {
-    // load new speech template
-    return
-  }
+  let current_section = template.points[0].section;
 
-  else {
-    // load stored speech template
-    return
-  }
+  // generate point elements
+  template.points.forEach(function(p) {
 
+    // handle section dividers
+    if(p.section > current_section) {
+      current_section = p.section;
+
+      // add page rule to divide sections
+      $("#points-container").append(
+        $(document.createElement("hr"))
+        .css("border-top", "5px dashed lightblue")
+        .addClass("section-divider")
+      )
+    }
+
+    // handle level
+    let margin = "10px 0";
+    let width = "100%";
+    if(p.level === 2) {
+      margin = "10px 5%";
+      width = "95%";
+    } else if(p.level === 3) {
+      margin = "10px 10%";
+      width = "90%";
+    } else if(p.level === 4) {
+      margin = "10px 15%";
+      width = "85%";
+    } else if(p.level === 5) {
+      margin = "10px 20%";
+      width = "80%";
+    }
+
+    $("#points-container").append(
+      $(document.createElement("div"))
+      .addClass("input-group point-group")
+
+      // level
+      .css("margin", margin)
+      .css("width", width)
+      .append(
+        $(document.createElement("div"))
+        .addClass("point-index")
+        .attr("data-index", p.index)
+      )
+      .append(
+        $(document.createElement("div"))
+        .addClass("input-group-prepend")
+        .append($(document.createElement("button"))
+          .addClass("btn btn-light")
+
+          // name and prefix
+          .html(((p.prefix == "") ? "" : p.prefix + ". ") + p.name)
+        )
+      )
+      .append($(document.createElement("textarea"))
+        .addClass("form-control point-textarea")
+        .attr("rows", "1")
+        .css("resize", "none")
+        .css("overflow", "hidden")
+
+        // value
+        .html(p.value)
+      )
+    )
+  })
+
+  // add textarea expanding behavior
+  $(".point-textarea").each(function() {
+    $(this).on("input", function() {
+      $(this).css("height", "");
+      $(this).css("height", Math.min($(this).prop('scrollHeight'), 1000) + "px");   
+    })
+  })
+
+}
+
+// add functionality to each side nav option
+function add_option_functionality() {
+
+  $("#shift-point-up-option").click(function() {
+    load_and_render();
+    button_config_shift_up();
+  })
+  $("#shift-point-down-option").click(function() {
+    load_and_render();
+    button_config_shift_down();
+  })
+
+}
+
+// update vals, reset speech points
+function load_and_render() {
+  update_point_input_values();
+  clear_points_container();
+  render_speech_from_template(speech);  
+}
+
+// shift down config
+function button_config_shift_down() {
+  $(".point-group").each(function() {
+    
+    // get index of current point
+    let i = $(this).find(".point-index").attr("data-index");
+
+    // skip if point not mutable
+    if(!(speech.points[i].mutable)) {
+      return true
+    }
+
+    // skip if point is on final level
+    if(speech.points[i].level === 5) {
+      return true
+    }
+    
+    // get index of previous point
+    let prev = $(this).prev()
+    let i_p = prev.find(".point-index").attr("data-index");
+
+    // skip if point is right after divider
+    if(prev[0] === undefined || prev.is("hr")) {
+      return true
+    }
+
+    // add func if previous point is the same level or lower
+    if(speech.points[i_p].level >= speech.points[i].level) {
+      $(this).find("button").css("background-color", "lightgreen");
+      $(this).find("button").click(function() {
+        speech.points[i].level += 1;
+        load_and_render();
+      })
+    }
+
+  })
+}
+
+// shift up config
+function button_config_shift_up() {
+  $(".point-group").each(function() {
+    
+    // get index of current point
+    let i = $(this).find(".point-index").attr("data-index");
+
+    // skip if point not mutable
+    if(!(speech.points[i].mutable)) {
+      return true
+    }
+
+    // skip if point is on first level
+    if(speech.points[i].level === 1) {
+      return true
+    }
+    
+    // get index of next point
+    let next = $(this).next()
+    let i_n = next.find(".point-index").attr("data-index");
+
+    // skip if point is right after divider
+    if((next[0] === undefined || next.is("hr")) ||
+    (speech.points[i_n].level <= speech.points[i].level)) {
+      $(this).find("button").css("background-color", "lightgreen");
+      $(this).find("button").click(function() {
+        speech.points[i].level -= 1;
+        load_and_render();
+      })
+    }
+
+  })
 }

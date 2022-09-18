@@ -4,12 +4,12 @@
 # 
 # 
 # To Do List:
-# - Brain Storm
-# - Compare to previous version
-# - Create basic flask site with user auth
 # - Alert confirm speech delete
-# - No Introduction Labels
-# - HR separating sections
+# - Auto Prefix generation
+# - Option functionalities
+# - Saving to database from page
+# - Exporting to word document
+# - Passwords...
 
 from website import create_app
 
