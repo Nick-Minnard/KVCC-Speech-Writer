@@ -95,14 +95,15 @@ let speech = [];
 function init() {
 
   // load starting template and generate points
-  if($("#speech-data").attr("data-internalid") == "empty") {
+  if($("#speech-data").attr("data-internalid") == "none") {
     speech = DEFAULT_TEMPLATE;
     load_and_render();
   }
 
   // load speech data
   else {
-    return
+    speech = JSON.parse($("#stringified-data").attr("data-internalid"));
+    load_and_render();
   }
 
   add_option_functionality();
@@ -204,20 +205,6 @@ function render_speech_from_template(template) {
 
 }
 
-// add functionality to each side nav option
-function add_option_functionality() {
-
-  $("#shift-point-up-option").click(function() {
-    load_and_render();
-    button_config_shift_up();
-  })
-  $("#shift-point-down-option").click(function() {
-    load_and_render();
-    button_config_shift_down();
-  })
-
-}
-
 // update vals, reset speech points
 function load_and_render() {
   update_point_input_values();
@@ -237,10 +224,12 @@ function regen_prefixes() {
 
     let this_level = p.level;
 
-    // reset on new section
+    // reset on body and conclusion sections
     if(last_section < p.section) {
-      tracker = [1, 1, 1, 1, 1];
-      last_section = p.section;
+      if(p.section == 3 || p.section == 6) {
+        tracker = [1, 1, 1, 1, 1];
+        last_section = p.section;
+      }
     }
 
     // handle non-mutable points which don't have prefixes
@@ -333,6 +322,68 @@ function romanize (integer) {
 
 }
 
+// convert speech to json
+function get_json() {
+  let json_object = {
+    "points" : []
+  };
+  //{name: "Specific Purpose", value: "", level: 1, prefix: "", index: 0, mutable: false, section: 1},
+  speech.points.forEach(function(p) {
+    json_object.points.push({
+      "name": p.name,
+      "value": p.value,
+      "level": p.level,
+      "prefix": p.prefix,
+      "index": p.index,
+      "mutable": p.mutable,
+      "section": p.section
+    })
+  })
+  return json_object;
+}
+
+// convert json to template
+function load_template_from_json() {
+  return;
+}
+
+// save speech to database
+function save_speech() {
+  console.log(get_json());
+  fetch('/save-speech', {
+    method: 'POST',
+    body: JSON.stringify({
+      speech_data: get_json(),
+      speech_id: $("#speech-id").attr("data-internalid")
+    })
+  })
+  .then((_res) => {
+    window.location.href = "/editor";
+  })
+}
+
+// add functionality to each side nav option
+function add_option_functionality() {
+
+  $("#save-speech-option").click(function() {
+    load_and_render();
+    save_speech();
+  })
+
+  $("#shift-point-up-option").click(function() {
+    load_and_render();
+    button_config_shift_up();
+  })
+  $("#shift-point-down-option").click(function() {
+    load_and_render();
+    button_config_shift_down();
+  })
+  $("#cancel-action-option").click(function() {
+    load_and_render();
+  })
+
+}
+
 // shift down config
 function button_config_shift_down() {
   $(".point-group").each(function() {
@@ -403,4 +454,24 @@ function button_config_shift_up() {
     }
 
   })
+}
+
+// add point config
+function button_config_add_point() {
+  return;
+}
+
+// rename point config
+function button_config_rename_point() {
+  return;
+}
+
+// section switch config
+function button_config_switch_sections() {
+  return;
+}
+
+// delete config
+function button_config_delete() {
+  return;
 }

@@ -5,14 +5,12 @@
 # 
 # TODO:
 # - Alert confirm speech delete
-# - Auto Prefix generation
 # - Option functionalities
-# - Saving to database from page
 # - Exporting to word document
 # - Passwords...
 # - Hotkey implementation
 # - Help window
-# - Cancel action option
+# - Preserve speech title on phone screen layout
 
 
 from website import create_app

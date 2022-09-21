@@ -1,10 +1,17 @@
 from . import db
 from flask_login import UserMixin
+import sqlalchemy_jsonfield
 
 class Speech(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   title = db.Column(db.String(150))
-  data = db.Column(db.Text)
+  data = db.Column(
+    sqlalchemy_jsonfield.JSONField(
+            enforce_string=True,
+            enforce_unicode=False
+        ),
+        nullable=False
+  )
   user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 class User(db.Model, UserMixin):

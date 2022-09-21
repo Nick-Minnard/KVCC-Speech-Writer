@@ -15,7 +15,7 @@ def home():
     if len(title) < 1:
       flash('Speech title is too short', category='error')
     else:
-      new_speech = Speech(title=title, data='empty', user_id=current_user.id)
+      new_speech = Speech(title=title, data="none", user_id=current_user.id)
       db.session.add(new_speech)
       db.session.commit()
       flash('New Speech Created!', category='success')
@@ -60,9 +60,23 @@ def load_speech():
   return jsonify({})
 
 @login_required
+@views.route('/save-speech', methods=['POST'])
+def save_speech():
+  speech = json.loads(request.data)
+  speech_data = speech['speech_data']
+  speech_id = speech['speech_id']
+  speech = Speech.query.get(speech_id)
+  if speech:
+    if speech.user_id == current_user.id:
+      speech.data = speech_data
+      print(speech.data)
+      db.session.commit()
+  return jsonify({})
+
+@login_required
 @views.route('/editor', methods=['GET', 'POST'])
 def editor():
   if current_user.current_speech_id == None:
     return redirect("/")
   speech = Speech.query.get(current_user.current_speech_id)
-  return render_template("editor.html", user=current_user, speech=speech)
+  return render_template("editor.html", user=current_user, speech=speech, stringified_data = json.dumps(speech.data))
