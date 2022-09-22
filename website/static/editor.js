@@ -465,7 +465,6 @@ function get_switchable_groups(group) {
 
 // save speech to database
 function save_speech() {
-  load_and_render();
   fetch('/save-speech', {
     method: 'POST',
     body: JSON.stringify({

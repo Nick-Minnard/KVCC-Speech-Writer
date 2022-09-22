@@ -1,8 +1,10 @@
-from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
+from flask import Blueprint, render_template, request, flash, jsonify, redirect, send_file
 from flask_login import login_required, current_user
 from .models import Speech
 from . import db
 import json
+from .create_doc import create_speech_doc
+import io
 
 views = Blueprint('views', __name__)
 
@@ -69,8 +71,20 @@ def save_speech():
   if speech:
     if speech.user_id == current_user.id:
       speech.data = speech_data
-      print(speech.data)
       db.session.commit()
+  return jsonify({})
+
+@login_required
+@views.route('/export-speech/')
+def export_speech():
+  speech = Speech.query.get(current_user.current_speech_id)
+  if speech:
+    if speech.user_id == current_user.id:
+      document = create_speech_doc(speech)
+      f = io.BytesIO()
+      document.save(f)
+      f.seek(0)
+      return send_file(f, as_attachment = True, download_name='speech.docx')
   return jsonify({})
 
 @login_required
