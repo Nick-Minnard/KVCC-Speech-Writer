@@ -9,7 +9,7 @@
 # - Exporting to word document
 # - Passwords...
 # - Hotkey implementation
-# - Help window
+# - Help window / Site info
 # - Preserve speech title on phone screen layout
 
 

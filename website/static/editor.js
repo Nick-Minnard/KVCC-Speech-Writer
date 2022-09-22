@@ -94,19 +94,23 @@ let speech = [];
 // initialize editor page
 function init() {
 
-  // load starting template and generate points
+  // load starting template and generate points if new speech
   if($("#speech-data").attr("data-internalid") == "none") {
     speech = DEFAULT_TEMPLATE;
     load_and_render();
   }
 
-  // load speech data
+  // load speech data from json if existing speech
   else {
     speech = JSON.parse($("#stringified-data").attr("data-internalid"));
     load_and_render();
   }
 
+  // attach functinos to nav bar buttons
   add_option_functionality();
+
+  // activate hot keys
+  set_hotkeys();
 
 }
 
@@ -119,24 +123,25 @@ function clear_points_container() {
 // update textarea field values in speech object
 function update_point_input_values() {
   $(".point-group").each(function() {
-    let i = $(this).find(".point-index").attr("data-index");
+    let i = parseInt($(this).find(".point-index").attr("data-index"));
     speech.points[i].value = $(this).find("textarea").val();
   })
 }
 
-// name, value, level, prefix, index, mutable, section
+// create points and horizontal rules
 function render_speech_from_template(template) {
 
+  // hold current section in order to add dividers later
   let current_section = template.points[0].section;
 
   // generate point elements
   template.points.forEach(function(p) {
 
-    // handle section dividers
+    // if it's a new section
     if(p.section > current_section) {
       current_section = p.section;
 
-      // add page rule to divide sections
+      // add a divider
       $("#points-container").append(
         $(document.createElement("hr"))
         .css("border-top", "5px dashed lightblue")
@@ -144,7 +149,7 @@ function render_speech_from_template(template) {
       )
     }
 
-    // handle level
+    // handle level styling
     let margin = "10px 0";
     let width = "100%";
     if(p.level === 2) {
@@ -161,6 +166,7 @@ function render_speech_from_template(template) {
       width = "80%";
     }
 
+    // add point "group"
     $("#points-container").append(
       $(document.createElement("div"))
       .addClass("input-group point-group")
@@ -173,16 +179,21 @@ function render_speech_from_template(template) {
         .addClass("point-index")
         .attr("data-index", p.index)
       )
+      
+      // prepended button
       .append(
         $(document.createElement("div"))
         .addClass("input-group-prepend")
         .append($(document.createElement("button"))
           .addClass("btn btn-light")
+          .attr("tabindex", "-1")
 
           // name and prefix
           .html(((p.prefix == "") ? "" : p.prefix) + p.name)
         )
       )
+
+      // input field
       .append($(document.createElement("textarea"))
         .addClass("form-control point-textarea")
         .attr("rows", "1")
@@ -191,11 +202,12 @@ function render_speech_from_template(template) {
 
         // value
         .html(p.value)
+
       )
     )
   })
 
-  // add textarea expanding behavior
+  // add aytomatic vertical expanding behavior to input fields
   $(".point-textarea").each(function() {
     $(this).on("input", function() {
       $(this).css("height", "");
@@ -205,7 +217,7 @@ function render_speech_from_template(template) {
 
 }
 
-// update vals, reset speech points
+// reset page and update "speech" object point values
 function load_and_render() {
   update_point_input_values();
   regen_prefixes();
@@ -216,15 +228,18 @@ function load_and_render() {
 // go through each point and assign correct prefix
 function regen_prefixes() {
 
+  // hold order of each level
   let tracker = [1, 1, 1, 1, 1]
   let last_level = 0;
   let last_section = 1;
 
+  // loop through points
   speech.points.forEach(function(p) {
 
+    // assign current level
     let this_level = p.level;
 
-    // reset on body and conclusion sections
+    // reset trackers on body and conclusion sections
     if(last_section < p.section) {
       if(p.section == 3 || p.section == 6) {
         tracker = [1, 1, 1, 1, 1];
@@ -238,6 +253,7 @@ function regen_prefixes() {
       mutable = false;
     }
     
+    // assign proper prefix to current point
     if(!(mutable)) {
       p.prefix = "";
     } else {
@@ -267,6 +283,7 @@ function regen_prefixes() {
 
     }
 
+    // store current level for next iteration
     last_level = this_level;
 
   })
@@ -322,12 +339,21 @@ function romanize (integer) {
 
 }
 
+// set keyboard shortcuts
+function set_hotkeys() {
+  document.addEventListener('keydown', e => {
+    if(e.ctrlKey && e.key === 's') {
+      e.preventDefault();
+      save_speech();
+    } else if(e.key === 'Escape') {
+      load_and_render();
+    }
+  });
+}
+
 // convert speech to json
 function get_json() {
-  let json_object = {
-    "points" : []
-  };
-  //{name: "Specific Purpose", value: "", level: 1, prefix: "", index: 0, mutable: false, section: 1},
+  let json_object = { "points" : [] };
   speech.points.forEach(function(p) {
     json_object.points.push({
       "name": p.name,
@@ -342,14 +368,9 @@ function get_json() {
   return json_object;
 }
 
-// convert json to template
-function load_template_from_json() {
-  return;
-}
-
 // save speech to database
 function save_speech() {
-  console.log(get_json());
+  load_and_render();
   fetch('/save-speech', {
     method: 'POST',
     body: JSON.stringify({
@@ -369,7 +390,14 @@ function add_option_functionality() {
     load_and_render();
     save_speech();
   })
-
+  $("#rename-point-option").click(function() {
+    load_and_render();
+    button_config_rename_point();
+  })
+  $("#add-point-option").click(function() {
+    load_and_render();
+    button_config_add_point();
+  })
   $("#shift-point-up-option").click(function() {
     load_and_render();
     button_config_shift_up();
@@ -377,6 +405,10 @@ function add_option_functionality() {
   $("#shift-point-down-option").click(function() {
     load_and_render();
     button_config_shift_down();
+  })
+  $("#delete-point-option").click(function() {
+    load_and_render();
+    button_config_delete();
   })
   $("#cancel-action-option").click(function() {
     load_and_render();
@@ -389,9 +421,9 @@ function button_config_shift_down() {
   $(".point-group").each(function() {
     
     // get index of current point
-    let i = $(this).find(".point-index").attr("data-index");
+    let i = parseInt($(this).find(".point-index").attr("data-index"));
 
-    // skip if point not mutable
+    // skip if point isn't mutable
     if(!(speech.points[i].mutable)) {
       return true
     }
@@ -410,7 +442,7 @@ function button_config_shift_down() {
       return true
     }
 
-    // add func if previous point is the same level or lower
+    // add button functionality if previous point is the same level or lower
     if(speech.points[i_p].level >= speech.points[i].level) {
       $(this).find("button").css("background-color", "lightgreen");
       $(this).find("button").click(function() {
@@ -427,9 +459,9 @@ function button_config_shift_up() {
   $(".point-group").each(function() {
     
     // get index of current point
-    let i = $(this).find(".point-index").attr("data-index");
+    let i = parseInt($(this).find(".point-index").attr("data-index"));
 
-    // skip if point not mutable
+    // skip if point isn't mutable
     if(!(speech.points[i].mutable)) {
       return true
     }
@@ -443,7 +475,7 @@ function button_config_shift_up() {
     let next = $(this).next()
     let i_n = next.find(".point-index").attr("data-index");
 
-    // skip if point is right after divider
+    // skip if point is right after divider otherwise add functionality
     if((next[0] === undefined || next.is("hr")) ||
     (speech.points[i_n].level <= speech.points[i].level)) {
       $(this).find("button").css("background-color", "lightgreen");
@@ -458,12 +490,89 @@ function button_config_shift_up() {
 
 // add point config
 function button_config_add_point() {
-  return;
+  $(".point-group").each(function() {
+    
+    // get index of current point
+    let i = parseInt($(this).find(".point-index").attr("data-index"));
+
+    // skip if point isn't mutable
+    if(!(speech.points[i].mutable)) {
+      return true;
+    }
+
+    // can't add if point is right after divider
+    if($(this).prev().is("hr")) {
+      return true;
+    }
+ 
+    // adjust bg colors to points
+    $(this).find("button").css('background-color', 'lightgreen');
+
+    // add functionality
+    $(this).find("button").click(function() {
+
+      // only add point if user enters a valid name
+      let name = prompt("Enter the new name of the point: ");
+      if(name == null || !(name) || !(name.trim())) {
+        console.log("DIDNT WORK");
+        load_and_render();
+        return;
+      }
+
+      // create new point
+      let current_point = speech.points[i];
+      let new_point = {
+        name: name,
+        value: "",
+        level: current_point.level,
+        prefix: "",
+        index: current_point.index + 1,
+        mutable: true,
+        section: current_point.section
+      }
+
+      // save inputs
+      update_point_input_values();
+
+      // add new point and adjust indicies
+      speech.points.splice(i + 1, 0, new_point);
+      for(let j = i + 2; j < speech.points.length; j++) {
+        speech.points[j].index++;
+      }
+
+      // reset speech
+      clear_points_container();
+      regen_prefixes();
+      render_speech_from_template(speech);
+
+    })
+
+  })
 }
 
 // rename point config
 function button_config_rename_point() {
-  return;
+  $(".point-group").each(function() {
+    
+    // get index of current point
+    let i = parseInt($(this).find(".point-index").attr("data-index"));
+
+    // skip if point isn't mutable
+    if(!(speech.points[i].mutable)) {
+      return true
+    }
+
+    // rename the point if the user enters a valid name
+    $(this).find("button").css("background-color", "lightgreen");
+    $(this).find("button").click(function() {
+      let new_name = prompt("Enter the new name of the point: ");
+      if(!(new_name == null || !(new_name) || !(new_name.trim()))) {
+        speech.points[i].name = new_name;
+      }
+      load_and_render();
+    })
+
+  })
 }
 
 // section switch config
@@ -473,5 +582,61 @@ function button_config_switch_sections() {
 
 // delete config
 function button_config_delete() {
-  return;
+  $(".point-group").each(function() {
+    
+    // get index of current point
+    let i = parseInt($(this).find(".point-index").attr("data-index"));
+
+    // skip if point isn't mutable
+    if(!(speech.points[i].mutable)) {
+      return true
+    }
+
+    // determine if point is deletable
+    let can_delete = true
+
+    // if there is a point after the one selected
+    if(i + 1 < speech.points.length) {
+
+      // and it is not mutable
+      if(!(speech.points[i + 1].mutable)) {
+
+        // if the one two ahead is below it then it can't be deleted
+        if(i + 2 < speech.points.length && speech.points[i + 2].level > speech.points[i].level) {
+          can_delete = false;
+        }
+
+      }
+
+      // if it is mutable
+      else if(speech.points[i + 1].level > speech.points[i].level) {
+        can_delete = false;
+      }
+      
+    }
+
+    // delete the point and adjust the affected indicies of the points
+    if(can_delete) {
+      $(this).find("button").removeClass("btn-light");
+      $(this).find("button").addClass("btn-danger");
+      $(this).find("button").click(function() {
+
+        // update inputs when button is clicked so the load_and_render()
+        // function doesn't attempt to update deleted point before html
+        // elements are updated with new indicies
+        update_point_input_values();
+        speech.points.splice(i, 1);
+        for(let j = i; j < speech.points.length; j++) {
+          speech.points[j].index -= 1;
+        }
+
+        // reset the speech
+        clear_points_container();
+        regen_prefixes();
+        render_speech_from_template(speech);
+        
+      })
+    }
+
+  })
 }
