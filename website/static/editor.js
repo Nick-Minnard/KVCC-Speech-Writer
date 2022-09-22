@@ -368,6 +368,101 @@ function get_json() {
   return json_object;
 }
 
+// get a setion under a point
+function get_switch_group(index) {
+
+  // list of indicies in section and loop variables
+  let point_indicies = [index];
+  let original_index = index;
+  let in_group = true;
+
+  // loop until a point at the same level is hit
+  while(in_group) {
+
+    // if point exists
+    if(index + 1 < speech.points.length) {
+
+      // handle entire body section switches
+      if(speech.points[index + 1].name === "Internal Preview") {
+        let found_transition = false;
+        while(!(found_transition)) {
+          point_indicies.push(index + 1);
+          if(speech.points[index + 1].name === "Transition") {
+            found_transition = true;
+            in_group = false;
+          } else {
+            index++;
+          }
+        }
+      }
+
+      // break if a point on the same level is found
+      else if(speech.points[index + 1].level <= speech.points[original_index].level) {
+        in_group = false;
+      }
+
+      // add point to list if it's under the original point
+      else {
+        point_indicies.push(index + 1);
+        index++;
+      }
+
+    }
+
+    // break if there is no next point
+    else {
+      in_group = false;
+    }
+
+  }
+
+  // return the list of indicies in the group
+  return point_indicies;
+
+}
+
+// get switchable groups
+function get_switchable_groups(group) {
+
+  // list of switchable groups
+  let s_groups = [];
+
+  // loop through points
+  speech.points.forEach(function(p) {
+
+    // continue if point isn't mutable
+    if(!(p.mutable)) {
+      return true;
+    }
+
+    // continue if point is the same as the group head
+    if(p.index === group[0]) {
+      return true;
+    }
+
+    // if point is on same level as group head
+    if(p.level === speech.points[group[0]].level) {
+
+      // get group
+      let s_group = get_switch_group(p.index);
+
+      // continue if group is only one point
+      if(s_group.length < 2) {
+        return true;
+      }
+
+      // add group to list
+      s_groups.push(s_group);
+
+    }
+
+  })
+
+  // return list
+  return s_groups;
+
+}
+
 // save speech to database
 function save_speech() {
   load_and_render();
@@ -397,6 +492,10 @@ function add_option_functionality() {
   $("#add-point-option").click(function() {
     load_and_render();
     button_config_add_point();
+  })
+  $("#switch-section-option").click(function() {
+    load_and_render();
+    button_config_switch_sections();
   })
   $("#shift-point-up-option").click(function() {
     load_and_render();
@@ -577,7 +676,113 @@ function button_config_rename_point() {
 
 // section switch config
 function button_config_switch_sections() {
-  return;
+  $(".point-group").each(function() {
+    
+    // get index of current point
+    let i = parseInt($(this).find(".point-index").attr("data-index"));
+
+    // skip if point isn't mutable
+    if(!(speech.points[i].mutable)) {
+      return true;
+    }
+
+    // get group of point
+    let group = get_switch_group(i);
+    
+    // can't switch section if it is only one point
+    if(group.length < 2) {
+      return true;
+    }
+
+    // get switchable sections
+    let s_groups = get_switchable_groups(group);
+
+    // skip if there are no switchable groups
+    if(s_groups.length < 1) {
+      return true;
+    }
+
+    // change bg of switchable points
+    $(this).find("button").css("background-color", "lightgreen");
+
+    // when the user chooses the first section
+    $(this).find("button").click(function() {
+
+      // reset speech
+      load_and_render();
+
+      // hold section head indicies
+      let heads = [];
+
+      // get section head indicies
+      s_groups.forEach(function(sg) { heads.push(sg[0]); })
+
+      // loop through points
+      $(".point-group").each(function() {
+
+        // highlight selected point
+        if(parseInt($(this).find(".point-index").attr("data-index")) === i) {
+          $(this).find("button").css("background-color", "orange");
+        }
+
+        // highlight switchable head
+        if(heads.includes(parseInt($(this).find(".point-index").attr("data-index")))) {
+          $(this).find("button").css("background-color", "lightgreen");
+
+          // on switchable head click
+          $(this).find("button").click(function() {
+
+            // update inputs before switch
+            update_point_input_values();
+
+            // find this switch group
+            let s_group = get_switch_group(parseInt($(this).parent().parent().find(".point-index").attr("data-index")));
+
+            // save sections for reassignment
+            let s_group_section = speech.points[s_group[0]].section;
+            let og_group_section = speech.points[group[0]].section;
+
+            // save sections
+            let temp_original_group = speech.points.slice(group[0], group[0] + group.length);
+            let temp_s_group = speech.points.slice(s_group[0], s_group[0] + s_group.length);
+
+            // change sections to correct
+            temp_original_group.forEach(function(p) {
+              p.section = s_group_section;
+            });
+            temp_s_group.forEach(function(p) {
+              p.section = og_group_section;
+            });
+
+            // replace original group
+            // ** replace lower section first to preserver the index of the higher section
+            if(group[0] < s_group[0]) {
+              speech.points.splice(s_group[0], s_group.length, ...temp_original_group);
+              speech.points.splice(group[0], group.length, ...temp_s_group);
+            } else {
+              speech.points.splice(group[0], group.length, ...temp_s_group);
+              speech.points.splice(s_group[0], s_group.length, ...temp_original_group);
+            }
+
+            // reorder all point indicies
+            for(let k = 0; k < speech.points.length; k++) {
+              speech.points[k].index = k;
+            }
+
+            // reset speech after switching
+            clear_points_container();
+            regen_prefixes();
+            render_speech_from_template(speech);
+
+          })
+
+        }
+
+      })
+
+    })
+
+  })
 }
 
 // delete config
@@ -634,7 +839,7 @@ function button_config_delete() {
         clear_points_container();
         regen_prefixes();
         render_speech_from_template(speech);
-        
+
       })
     }
 
