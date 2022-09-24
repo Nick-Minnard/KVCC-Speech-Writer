@@ -11,9 +11,9 @@
 # - Word doc formatting
 
 
-from website.app import create_app
+from app import create_app
 
 app = create_app()
 
 if __name__ == '__main__':
-  app.run(debug=True) # debug mode keeps site running
+  app.run() # debug mode keeps site running
