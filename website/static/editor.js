@@ -91,6 +91,8 @@ let DEFAULT_TEMPLATE = {
 
 let speech = [];
 
+let highlight_color = "#8ED8FF";
+
 // initialize editor page
 function init() {
 
@@ -347,6 +349,21 @@ function set_hotkeys() {
       save_speech();
     } else if(e.key === 'Escape') {
       load_and_render();
+    } else if(e.ctrlKey && e.key === '1') {
+      e.preventDefault(); load_and_render();
+      button_config_add_point();
+    } else if(e.ctrlKey && e.key === '2') {
+      e.preventDefault(); load_and_render();
+      button_config_rename_point();
+    } else if(e.ctrlKey && e.key === '3') {
+      e.preventDefault(); load_and_render();
+      button_config_shift_up();
+    } else if(e.ctrlKey && e.key === '4') {
+      e.preventDefault(); load_and_render();
+      button_config_shift_down();
+    } else if(e.ctrlKey && e.key === '5') {
+      e.preventDefault(); load_and_render();
+      button_config_switch_sections();
     }
   });
 }
@@ -542,7 +559,7 @@ function button_config_shift_down() {
 
     // add button functionality if previous point is the same level or lower
     if(speech.points[i_p].level >= speech.points[i].level) {
-      $(this).find("button").css("background-color", "lightgreen");
+      $(this).find("button").css("background-color", highlight_color);
       $(this).find("button").click(function() {
         speech.points[i].level += 1;
         load_and_render();
@@ -576,7 +593,7 @@ function button_config_shift_up() {
     // skip if point is right after divider otherwise add functionality
     if((next[0] === undefined || next.is("hr")) ||
     (speech.points[i_n].level <= speech.points[i].level)) {
-      $(this).find("button").css("background-color", "lightgreen");
+      $(this).find("button").css("background-color", highlight_color);
       $(this).find("button").click(function() {
         speech.points[i].level -= 1;
         load_and_render();
@@ -604,7 +621,7 @@ function button_config_add_point() {
     }
  
     // adjust bg colors to points
-    $(this).find("button").css('background-color', 'lightgreen');
+    $(this).find("button").css('background-color', highlight_color);
 
     // add functionality
     $(this).find("button").click(function() {
@@ -661,7 +678,7 @@ function button_config_rename_point() {
     }
 
     // rename the point if the user enters a valid name
-    $(this).find("button").css("background-color", "lightgreen");
+    $(this).find("button").css("background-color", highlight_color);
     $(this).find("button").click(function() {
       let new_name = prompt("Enter the new name of the point: ");
       if(!(new_name == null || !(new_name) || !(new_name.trim()))) {
@@ -702,7 +719,7 @@ function button_config_switch_sections() {
     }
 
     // change bg of switchable points
-    $(this).find("button").css("background-color", "lightgreen");
+    $(this).find("button").css("background-color", highlight_color);
 
     // when the user chooses the first section
     $(this).find("button").click(function() {
@@ -720,13 +737,13 @@ function button_config_switch_sections() {
       $(".point-group").each(function() {
 
         // highlight selected point
-        if(parseInt($(this).find(".point-index").attr("data-index")) === i) {
-          $(this).find("button").css("background-color", "orange");
+        if(group.includes(parseInt($(this).find(".point-index").attr("data-index")))) {
+          $(this).find("button").css("background-color", "#8EFFAB");
         }
 
         // highlight switchable head
         if(heads.includes(parseInt($(this).find(".point-index").attr("data-index")))) {
-          $(this).find("button").css("background-color", "lightgreen");
+          $(this).find("button").css("background-color", highlight_color);
 
           // on switchable head click
           $(this).find("button").click(function() {

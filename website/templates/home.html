@@ -3,16 +3,17 @@
 {% block content %}
 <div class="container">
   <br>
-  <h1 align="center">Speeches</h1>
+  <h1 align="center">My Speeches</h1>
+  <br>
   <ul class="list-group list-group-flush" id="speeches">
     {% for speech in user.speeches %}
     <li class="list-group-item">
       <div class="input-group">
         <div class="input-group-prepend">
-          <button class="btn btn-secondary" onclick="updateTitle(document.getElementById('{{speech.id}}').id)">Edit Title</button>
+          <button class="btn btn-primary" onclick="updateTitle(document.getElementById('{{speech.id}}').id)">Edit Title</button>
         </div>
         <div class="input-group-prepend">
-          <button class="btn btn-secondary" onclick="loadSpeech(document.getElementById('{{speech.id}}').id)" style="margin:0 15px;">Load Speech</button>
+          <button class="btn btn-primary" onclick="loadSpeech(document.getElementById('{{speech.id}}').id)" style="margin:0 15px;">Load Speech</button>
         </div>
         <input type="text" id="speech-list-title-{{ speech.id }}" class="form-control" style="background-color: white; border: 0; margin: 0 5px;"
         placeholder="{{ speech.title }}" readonly>

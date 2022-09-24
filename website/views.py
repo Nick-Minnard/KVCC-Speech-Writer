@@ -14,8 +14,8 @@ def home():
   if request.method == 'POST':
     title = request.form.get('title')
 
-    if len(title) < 1:
-      flash('Speech title is too short', category='error')
+    if len(title) < 1 or title.strip() == "":
+      flash('Invalid title was entered', category='error')
     else:
       new_speech = Speech(title=title, data="none", user_id=current_user.id)
       db.session.add(new_speech)

@@ -1,11 +1,16 @@
 function deleteSpeech(speechId) {
-  fetch('/delete-speech', {
-    method: 'POST',
-    body: JSON.stringify({ speechId: speechId })
-  })
-  .then((_res) => {
-    window.location.href = "/";
-  })
+  let c = confirm("Are you sure you want to DELETE this speech?");
+  if(c) {
+    fetch('/delete-speech', {
+      method: 'POST',
+      body: JSON.stringify({ speechId: speechId })
+    })
+    .then((_res) => {
+      window.location.href = "/";
+    })
+  } else {
+    return;
+  }
 }
 
 function updateTitle(speechId) {

@@ -17,6 +17,16 @@
   text-decoration: none;
 }
 
+.sidebar span {
+  float: right;
+  color: gray;
+}
+
+.sidebar hr {
+  margin: 0;
+  padding: 0;
+}
+
 /* Active/current link */
 .sidebar a.active {
   background-color: #21c6f8;
