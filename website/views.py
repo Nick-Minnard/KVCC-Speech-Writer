@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, send_file
 from flask_login import login_required, current_user
 from .models import Speech
-from . import db
+from .app import db
 import json
 from .create_doc import create_speech_doc
 import io
