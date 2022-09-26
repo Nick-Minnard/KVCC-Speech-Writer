@@ -346,6 +346,7 @@ function set_hotkeys() {
   document.addEventListener('keydown', e => {
     if(e.ctrlKey && e.key === 's') {
       e.preventDefault();
+      load_and_render();
       save_speech();
     } else if(e.key === 'Escape') {
       load_and_render();

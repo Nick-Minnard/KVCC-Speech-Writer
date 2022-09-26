@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, jsonify, redirect, send_file
+from flask import Blueprint, render_template, request, flash, jsonify, redirect, send_file, url_for
 from flask_login import login_required, current_user
 from .models import Speech
 from . import db
@@ -22,7 +22,13 @@ def home():
       db.session.commit()
       flash('New Speech Created!', category='success')
 
-  return render_template("home.html", user=current_user)
+    return render_template("home.html", user=current_user)
+    
+  if request.method == 'GET':
+    if current_user and current_user.is_authenticated:
+      return render_template("home.html", user=current_user)
+    else:
+      return redirect(url_for("auth.login"))
 
 @login_required
 @views.route('/delete-speech', methods=['POST'])
@@ -84,7 +90,7 @@ def export_speech():
       f = io.BytesIO()
       document.save(f)
       f.seek(0)
-      return send_file(f, as_attachment = True, download_name='speech.docx')
+      return send_file(f, as_attachment = True, download_name=speech.title + '.docx')
   return jsonify({})
 
 @login_required
