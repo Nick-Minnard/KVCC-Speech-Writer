@@ -14,6 +14,7 @@
       href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='editor_styles.css') }}">
     <title>Editor</title>
   </head>
@@ -25,16 +26,16 @@
 
     <div class="sidebar">
       <a class="active" href="#/">KVCC Speech Writer</a>
-      <a id="save-speech-option" href="#/">Save Speech <span>[Ctrl+S]</span></a><hr>
-      <a id="add-point-option" href="#/">Add Point <span>[Ctrl+1]</span></a><hr>
-      <a id="rename-point-option" href="#/">Rename Point <span>[Ctrl+2]</span></a><hr>
-      <a id="shift-point-up-option" href="#/">Shift Point Up <span>[Ctrl+3]</span></a><hr>
-      <a id="shift-point-down-option" href="#/">Shift Point Down <span>[Ctrl+4]</span></a><hr>
-      <a id="switch-section-option" href="#/">Switch Sections <span>[Ctrl+5]</span></a><hr>
-      <a id="cancel-action-option" href="#/">Cancel Action <span>[ESC]</span></a><hr>
-      <a id="delete-point-option" href="#/">Delete Point</a><hr>
-      <a href="/export-speech/">Download Word Document</a><hr>
-      <a href="/site-info">Site Info</a><hr>
+      <a id="save-speech-option" href="#/"><i class="bi bi-cloud-arrow-up"></i> Save Speech <span>[Ctrl+S]</span></a><hr>
+      <a id="add-point-option" href="#/"><i class="bi bi-plus-circle"></i> Add Point <span>[Ctrl+1]</span></a><hr>
+      <a id="rename-point-option" href="#/"><i class="bi bi-pencil-square"></i> Rename Point <span>[Ctrl+2]</span></a><hr>
+      <a id="shift-point-up-option" href="#/"><i class="bi bi-arrow-up-square"></i> Shift Point Up <span>[Ctrl+3]</span></a><hr>
+      <a id="shift-point-down-option" href="#/"><i class="bi bi-arrow-down-square"></i> Shift Point Down <span>[Ctrl+4]</span></a><hr>
+      <a id="switch-section-option" href="#/"><i class="bi bi-arrow-left-right"></i> Switch Sections <span>[Ctrl+5]</span></a><hr>
+      <a id="cancel-action-option" href="#/"><i class="bi bi-x-circle"></i> Cancel Action <span>[ESC]</span></a><hr>
+      <a id="delete-point-option" href="#/"><i class="bi bi-trash"></i> Delete Point</a><hr>
+      <a href="/export-speech/"><i class="bi bi-file-earmark-arrow-down"></i> Download Word Document</a><hr>
+      <a href="/site-info"><i class="bi bi-question-circle"></i> Site Info</a><hr>
     </div>
 
     <div class="content">

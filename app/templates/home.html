@@ -14,11 +14,13 @@
         </div>
         <input type="text" disabled class="form-control" style="background-color: white; border: 0; margin: 0 5px;" readonly>
         <div class="input-group-append">
-          <button class="btn btn-success" onclick="updateTitle(document.getElementById('{{speech.id}}').id)" style="border-radius:5px; margin: 0 15px">Edit Title</button>
+          <button class="btn btn-success" onclick="updateTitle(document.getElementById('{{speech.id}}').id)" style="border-radius:5px; margin: 0 15px">
+            <i class="bi bi-pencil-square"></i> Edit Title
+          </button>
         </div>
         <div class="input-group-append">
           <button type="button" id="{{speech.id}}" class="close" onclick="deleteSpeech(document.getElementById('{{speech.id}}').id)">
-            <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true"><i class="bi bi-trash"></i> </span>
           </button>
         </div>
       </div>
