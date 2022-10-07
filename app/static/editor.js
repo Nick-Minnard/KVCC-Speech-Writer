@@ -496,9 +496,6 @@ function save_speech() {
       speech_id: $("#speech-id").attr("data-internalid")
     })
   })
-  .then((_res) => {
-    window.location.href = "/editor";
-  })
 }
 
 // add functionality to each side nav option

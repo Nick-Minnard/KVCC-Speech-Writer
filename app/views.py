@@ -81,6 +81,7 @@ def save_speech():
     if speech.user_id == current_user.id:
       speech.data = speech_data
       db.session.commit()
+  return jsonify({})
 
 @login_required
 @views.route('/export-speech/')
@@ -93,6 +94,7 @@ def export_speech():
       document.save(f)
       f.seek(0)
       return send_file(f, as_attachment = True, download_name=speech.title + '.docx')
+  return jsonify({})
 
 @login_required
 @views.route('/editor', methods=['GET', 'POST'])

@@ -6,7 +6,7 @@
 # TODO: Ready for user testing by 10-17
 # - Help window / Site info
 # - Word doc formatting
-# - Help / Info display
+# - Help / Info popups
 # - Backups?
 # - KVCC color styling / bootstrap icons
 # - Disclaimer...?
