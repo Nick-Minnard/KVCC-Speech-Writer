@@ -114,6 +114,12 @@ function init() {
   // activate hot keys
   set_hotkeys();
 
+  // save if the page reloads or closes
+  window.onbeforeunload = function () {
+    load_and_render();
+    save_speech();
+  }
+  
 }
 
 // wipe all elements from speech section

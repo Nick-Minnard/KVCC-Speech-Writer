@@ -10,13 +10,12 @@
     <li class="list-group-item">
       <div class="input-group">
         <div class="input-group-prepend">
-          <button class="btn btn-primary" onclick="updateTitle(document.getElementById('{{speech.id}}').id)">Edit Title</button>
+          <a class="btn-link" onclick="loadSpeech(document.getElementById('{{speech.id}}').id)" style="cursor: pointer;margin:auto;color:blue;text-decoration:underline;">{{ speech.title }}</a>
         </div>
-        <div class="input-group-prepend">
-          <button class="btn btn-primary" onclick="loadSpeech(document.getElementById('{{speech.id}}').id)" style="margin:0 15px;">Load Speech</button>
+        <input type="text" disabled class="form-control" style="background-color: white; border: 0; margin: 0 5px;" readonly>
+        <div class="input-group-append">
+          <button class="btn btn-success" onclick="updateTitle(document.getElementById('{{speech.id}}').id)" style="border-radius:5px; margin: 0 15px">Edit Title</button>
         </div>
-        <input type="text" id="speech-list-title-{{ speech.id }}" class="form-control" style="background-color: white; border: 0; margin: 0 5px;"
-        placeholder="{{ speech.title }}" readonly>
         <div class="input-group-append">
           <button type="button" id="{{speech.id}}" class="close" onclick="deleteSpeech(document.getElementById('{{speech.id}}').id)">
             <span aria-hidden="true">&times;</span>

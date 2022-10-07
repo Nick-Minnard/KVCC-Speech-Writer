@@ -30,6 +30,10 @@ def home():
     else:
       return redirect(url_for("auth.login"))
 
+@views.route('/site-info', methods=['GET', 'POST'])
+def site_info():
+  return render_template('site_info.html', user=current_user)
+
 @login_required
 @views.route('/delete-speech', methods=['POST'])
 def delete_speech():
@@ -65,7 +69,6 @@ def load_speech():
     if speech.user_id == current_user.id:
       current_user.current_speech_id = speechId
       db.session.commit()
-  return jsonify({})
 
 @login_required
 @views.route('/save-speech', methods=['POST'])
@@ -78,7 +81,6 @@ def save_speech():
     if speech.user_id == current_user.id:
       speech.data = speech_data
       db.session.commit()
-  return jsonify({})
 
 @login_required
 @views.route('/export-speech/')
@@ -91,12 +93,12 @@ def export_speech():
       document.save(f)
       f.seek(0)
       return send_file(f, as_attachment = True, download_name=speech.title + '.docx')
-  return jsonify({})
 
 @login_required
 @views.route('/editor', methods=['GET', 'POST'])
 def editor():
-  if current_user.current_speech_id == None:
-    return redirect("/")
-  speech = Speech.query.get(current_user.current_speech_id)
-  return render_template("editor.html", user=current_user, speech=speech, stringified_data = json.dumps(speech.data))
+  if current_user:
+    if current_user.current_speech_id == None:
+      return redirect("/")
+    speech = Speech.query.get(current_user.current_speech_id)
+    return render_template("editor.html", user=current_user, speech=speech, stringified_data = json.dumps(speech.data))

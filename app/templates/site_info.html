@@ -15,26 +15,13 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="{{ url_for('static', filename='editor_styles.css') }}">
-    <title>Editor</title>
+    <title>Site Info</title>
   </head>
   <body onload="init();">
 
-    <div data-internalid={{speech.id}} id="speech-id"></div>
-    <div data-internalid={{speech.data}} id="speech-data"></div>
-    <div data-internalid='{{stringified_data}}' id="stringified-data"></div>
-
     <div class="sidebar">
       <a class="active" href="#/">KVCC Speech Writer</a>
-      <a id="save-speech-option" href="#/">Save Speech <span>[Ctrl+S]</span></a><hr>
-      <a id="add-point-option" href="#/">Add Point <span>[Ctrl+1]</span></a><hr>
-      <a id="rename-point-option" href="#/">Rename Point <span>[Ctrl+2]</span></a><hr>
-      <a id="shift-point-up-option" href="#/">Shift Point Up <span>[Ctrl+3]</span></a><hr>
-      <a id="shift-point-down-option" href="#/">Shift Point Down <span>[Ctrl+4]</span></a><hr>
-      <a id="switch-section-option" href="#/">Switch Sections <span>[Ctrl+5]</span></a><hr>
-      <a id="cancel-action-option" href="#/">Cancel Action <span>[ESC]</span></a><hr>
-      <a id="delete-point-option" href="#/">Delete Point</a><hr>
-      <a href="/export-speech/">Download Word Document</a><hr>
-      <a href="/site-info">Site Info</a><hr>
+      <a href="/editor">Back to editor</a><hr>
     </div>
 
     <div class="content">
@@ -44,7 +31,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbar">
           <div class="navbar-nav mx-auto">
-            <a class="navbar-brand" href="#">{{ speech.title }}</a>
+            <a class="navbar-brand" href="#">Site Info / Tutorial</a>
           </div>
           <div class="navbar-nav ml-auto" style="margin-right: 3%;">
             <a class="nav-item nav-link" id="home" href="{{url_for('views.home')}}">Home</a>
@@ -54,7 +41,7 @@
       </nav>
 
       <div id="points-container" class="container">
-        <!--points will be generated here-->
+        
       </div>
 
     </div>
@@ -73,14 +60,6 @@
       src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
       integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
       crossorigin="anonymous"
-    ></script>
-    <script
-      type="text/javascript"
-      src="{{ url_for('static', filename='index.js') }}"
-    ></script>
-    <script
-      type="text/javascript"
-      src="{{ url_for('static', filename='editor.js') }}"
     ></script>
   </body>
 </html>
