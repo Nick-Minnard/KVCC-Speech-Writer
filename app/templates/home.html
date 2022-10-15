@@ -5,72 +5,46 @@
   <br>
   <h1 align="center">My Speeches</h1>
   <br>
-  <ul class="list-group list-group-flush" id="speeches">
-    <div class="row border-bottom">
-      <div class="col-3 d-flex justify-content-center align-items-center">
-        <span><b>Title</b></span>
-      </div>
-      <div class="col-3 d-flex justify-content-center align-items-center">
-        <span><b>Updated On:</b></span>
-      </div>
-      <div class="col-3 d-flex justify-content-center align-items-center">
-        <span><b>Created On:</b></span>
-      </div>
-      <div class="col-2 d-flex justify-content-center align-items-center">
-        <span><b>Edit</b></span>
-      </div>
-      <div class="col-1 d-flex justify-content-center align-items-center">
-        <span><b>Delete</b></span>
-      </div>
+  <div class="row border-bottom">
+    <div class="col-3 d-flex justify-content-center align-items-center">
+      <span><b>Title / Link</b></span>
     </div>
-    {% for speech in user.speeches %}
-    <!-- <li class="list-group-item">
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <a class="btn-link" onclick="loadSpeech(document.getElementById('{{speech.id}}').id)" style="cursor: pointer;margin:auto;color:blue;text-decoration:underline;">{{ speech.title }}</a>
-        </div>
-        <div class="input-group-prepend">
-          <span class="my-auto mx-4 ml-5">Updated: {{ speech.get_updated() }}</span>
-        </div>
-        <div class="input-group-prepend">
-          <span class="my-auto mx-4">Created: {{ speech.get_created() }}</span>
-        </div>
-        <input type="text" disabled class="form-control" style="background-color: white; border: 0; margin: 0 5px;" readonly>
-        <div class="input-group-append">
-          <button class="btn btn-success" onclick="updateTitle(document.getElementById('{{speech.id}}').id)" style="border-radius:5px; margin: 0 15px">
-            <i class="bi bi-pencil-square"></i> Edit Title
-          </button>
-        </div>
-        <div class="input-group-append">
-          <button type="button" id="{{speech.id}}" class="close" onclick="deleteSpeech(document.getElementById('{{speech.id}}').id)">
-            <span aria-hidden="true"><i class="bi bi-trash"></i> </span>
-          </button>
-        </div>
-      </div>
-    </li> -->
-    <div class="row border-bottom p-2">
-      <div class="col-3 d-flex justify-content-center align-items-center">
-        <a class="btn-link" onclick="loadSpeech(document.getElementById('{{speech.id}}').id)" style="cursor: pointer;margin:auto;color:blue;text-decoration:underline;">{{ speech.title }}</a>
-      </div>
-      <div class="col-3 d-flex justify-content-center align-items-center">
-        <span class="">{{ speech.get_updated() }}</span>
-      </div>
-      <div class="col-3 d-flex justify-content-center align-items-center">
-        <span>{{ speech.get_created() }}</span>
-      </div>
-      <div class="col-2 p-1 d-flex justify-content-center align-items-center">
-        <button class="btn btn-success" onclick="updateTitle(document.getElementById('{{speech.id}}').id)" style="border-radius:5px;">
-          <i class="bi bi-pencil-square"></i> Edit Title
-        </button>
-      </div>
-      <div class="col-1 d-flex justify-content-center align-items-center">
-        <button type="button" id="{{speech.id}}" class="close" onclick="deleteSpeech(document.getElementById('{{speech.id}}').id)">
-          <span aria-hidden="true"><i class="bi bi-trash"></i> </span>
-        </button>
-      </div>
+    <div class="col-3 d-flex justify-content-center align-items-center">
+      <span><b>Last Updated On:</b></span>
     </div>
-    {% endfor %}
-  </ul>
+    <div class="col-3 d-flex justify-content-center align-items-center">
+      <span><b>Created On:</b></span>
+    </div>
+    <div class="col-2 d-flex justify-content-center align-items-center">
+      <span><b>Change Title</b></span>
+    </div>
+    <div class="col-1 d-flex justify-content-center align-items-center">
+      <span><b>Delete</b></span>
+    </div>
+  </div>
+  {% for speech in user.speeches %}
+  <div class="row border-bottom py-2">
+    <div class="col-3 d-flex justify-content-center align-items-center">
+      <a class="btn-link" onclick="loadSpeech(document.getElementById('{{speech.id}}').id)" style="cursor: pointer;margin:auto;color:blue;text-decoration:underline;">{{ speech.title }}</a>
+    </div>
+    <div class="col-3 d-flex justify-content-center align-items-center">
+      <span class="">{{ speech.get_updated() }}</span>
+    </div>
+    <div class="col-3 d-flex justify-content-center align-items-center">
+      <span>{{ speech.get_created() }}</span>
+    </div>
+    <div class="col-2 p-1 d-flex justify-content-center align-items-center">
+      <button class="btn btn-success" onclick="updateTitle(document.getElementById('{{speech.id}}').id)" style="border-radius:5px;">
+        <i class="bi bi-pencil-square"></i> Edit Title
+      </button>
+    </div>
+    <div class="col-1 d-flex justify-content-center align-items-center">
+      <button type="button" id="{{speech.id}}" class="close" onclick="deleteSpeech(document.getElementById('{{speech.id}}').id)">
+        <span aria-hidden="true"><i class="bi bi-trash"></i> </span>
+      </button>
+    </div>
+  </div>
+  {% endfor %}
   <br>
   <form method="POST">
     <div class="input-group">

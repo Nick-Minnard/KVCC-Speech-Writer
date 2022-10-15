@@ -5,8 +5,6 @@
 
 # TODO: Ready for user testing by 10-17
 # Pop up modal box on hover of nav links
-# Add content to site info
-# Move styling to external css files
 # Personal error testing
 # Prepare presentation
 # Document entire project
@@ -20,4 +18,4 @@
 from app import app
 
 if __name__ == '__main__':
-  app.run(debug=True) # debug mode keeps site running
+  app.run()
