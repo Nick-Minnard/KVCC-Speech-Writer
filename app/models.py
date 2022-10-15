@@ -1,10 +1,10 @@
 from . import db
 from flask_login import UserMixin
 import sqlalchemy_jsonfield
-from datetime import datetime
-from pytz import timezone
+import datetime
 
-tz = timezone("US/Eastern")
+NYCTimeDelta = datetime.timedelta(hours=-4)
+NYC = datetime.timezone(NYCTimeDelta, name="NYC")
 
 class Speech(db.Model):
   id = db.Column(db.Integer, primary_key=True)
@@ -16,15 +16,15 @@ class Speech(db.Model):
     ),
     nullable=False
   )
-  updated = db.Column(db.DateTime(timezone=True), default=datetime.now(tz=tz), onupdate=lambda: datetime.now(tz=tz))
-  created = db.Column(db.DateTime(timezone=True), default=datetime.now(tz=tz))
+  updated = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now(tz=NYC), onupdate=lambda: datetime.datetime.now(tz=NYC))
+  created = db.Column(db.DateTime(timezone=True), default=datetime.datetime.now(tz=NYC))
   user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
   def get_updated(self):
-    return self.updated.strftime("%Y-%m-%d %H:%M:%S")
+    return self.updated.strftime("%Y-%m-%d %I:%M %p")
 
   def get_created(self):
-    return self.created.strftime("%Y-%m-%d %H:%M:%S")
+    return self.created.strftime("%Y-%m-%d %I:%M %p")
 
 class User(db.Model, UserMixin):
   id = db.Column(db.Integer, primary_key=True)
