@@ -217,6 +217,8 @@ function render_speech_from_template(template) {
 
   // add aytomatic vertical expanding behavior to input fields
   $(".point-textarea").each(function() {
+    $(this).css("height", "");
+    $(this).css("height", Math.min($(this).prop('scrollHeight'), 1000) + "px"); 
     $(this).on("input", function() {
       $(this).css("height", "");
       $(this).css("height", Math.min($(this).prop('scrollHeight'), 1000) + "px");   

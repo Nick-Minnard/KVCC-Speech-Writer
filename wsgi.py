@@ -4,11 +4,18 @@
 
 
 # TODO: Ready for user testing by 10-17
-# - Help / Info popups
-# - Backups?
-# - KVCC color styling / bootstrap icons
-# - inline css to editor sheet
-# - Thorough documentation
+# Pop up modal box on hover of nav links
+# Add content to site info
+# Move styling to external css files
+# Personal error testing
+# Prepare presentation
+# Document entire project
+
+# Profile page with
+# 1. log out
+# 2. reset password
+# 3. update username
+# 4. delete account
 
 from app import app
 
