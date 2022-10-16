@@ -10,10 +10,11 @@ auth = Blueprint('auth', __name__)
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+  """Login view"""
   if request.method == 'POST':
     email = request.form.get('email')
     password = request.form.get('password')
-
+    # Validate user
     user = User.query.filter_by(email=email).first()
     if user:
       if check_password_hash(user.password, password):
@@ -29,19 +30,20 @@ def login():
 @auth.route('/logout')
 @login_required
 def logout():
+  """Logout route"""
   logout_user()
   return redirect(url_for('auth.login'))
 
 @auth.route('/signup', methods=['GET', 'POST'])
 def signup():
+  """Signup view"""
   if request.method == 'POST':
     email = request.form.get('email')
     username = request.form.get('username')
     password1 = request.form.get('password1')
     password2 = request.form.get('password2')
-
+    # Validate fields
     user = User.query.filter_by(email=email).first()
-
     if user:
       flash('Account with this email already exists!', category='error')
     elif len(email) < 4:
@@ -53,6 +55,7 @@ def signup():
     elif len(password1) < 7:
       flash('Password must be at least 7 characters', category='error')
     else:
+      # Create new user and log them in
       new_user = User(email=email, username=username, password=generate_password_hash(password1, method='sha256'))
       db.session.add(new_user)
       db.session.commit()
@@ -64,15 +67,17 @@ def signup():
 
 @auth.route('/reset-password', methods=['GET', 'POST'])
 def reset_password():
+  """Reset password view"""
   if request.method == 'POST':
     password1 = request.form.get('password1')
     password2 = request.form.get('password2')
-
+    # Validate new password
     if password1 != password2:
       flash('Passwords don\'t match', category='error')
     elif len(password1) < 7:
       flash('Password must be at least 7 characters', category='error')
     else:
+      # Change password
       current_user.password = generate_password_hash(password1, method="sha256")
       db.session.commit()
       flash('Password reset!', category='success')
@@ -82,22 +87,22 @@ def reset_password():
 
 @auth.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
+  """Forgot password view"""
   if request.method == 'POST':
     email = request.form.get('email')
-
+    # Validate user
     user = User.query.filter_by(email=email).first()
-
     if not user:
       flash('Account with this email doesn\'t exist!', category='error')
-    else:                    
+    else:
+      # Generate random 12 character password
       lower = string.ascii_lowercase
       upper = string.ascii_uppercase
       num = string.digits
-      symbols = string.punctuation
-      char_set = lower + upper + num + symbols
+      char_set = lower + upper + num
       temp = random.sample(char_set,12)
       new_password = "".join(temp)
-
+      # Create email and send it to the user with the recovery key
       mail = Mail(current_app)
       msg = Message()
       msg.subject = "Forgot Password"
@@ -106,7 +111,7 @@ def forgot_password():
       msg.body = '''This is a recovery email. Use the below password to login into your account. From
       there you can reset your password once logged in or continue to use the one that has been generated for you: ''' + new_password
       mail.send(msg)
-
+      # Set the user's password to the recovery key
       user.password = generate_password_hash(new_password, method="sha256")
       db.session.commit()
 

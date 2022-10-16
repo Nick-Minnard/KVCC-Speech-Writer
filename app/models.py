@@ -3,10 +3,12 @@ from flask_login import UserMixin
 import sqlalchemy_jsonfield
 import datetime
 
+# Create eastern timezone object
 NYCTimeDelta = datetime.timedelta(hours=-4)
 NYC = datetime.timezone(NYCTimeDelta, name="NYC")
 
 class Speech(db.Model):
+  """Speech Model"""
   id = db.Column(db.Integer, primary_key=True)
   title = db.Column(db.String(150))
   data = db.Column(
@@ -21,12 +23,15 @@ class Speech(db.Model):
   user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
   def get_updated(self):
+    """Get updated time method"""
     return self.updated.strftime("%Y-%m-%d %I:%M %p")
 
   def get_created(self):
+    """Get created time method"""
     return self.created.strftime("%Y-%m-%d %I:%M %p")
 
 class User(db.Model, UserMixin):
+  """User Model"""
   id = db.Column(db.Integer, primary_key=True)
   email = db.Column(db.String(150), unique=True)
   password = db.Column(db.String(150))

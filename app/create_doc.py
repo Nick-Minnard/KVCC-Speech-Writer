@@ -3,11 +3,11 @@ from docx.shared import RGBColor, Pt
 from haggis.files.docx import list_number
 
 def create_speech_doc(speech):
+  """Create speech document function"""
   d = Document()
   d.add_heading(speech.title, 0)
-
   current_section = 1
-
+  # Create a styled word doc with docx and return it to be downloaded
   for point in speech.data["points"]:
     if point["section"] > current_section:
       current_section += 1

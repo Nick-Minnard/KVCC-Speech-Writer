@@ -2,12 +2,12 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
-from flask_mail import Mail
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
 
 def create_app():
+  """Configure and return the Flask app"""
   app = Flask(__name__)
   app.config['SECRET_KEY'] = 'n3Uc!88D@l93jE0d'
   app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'

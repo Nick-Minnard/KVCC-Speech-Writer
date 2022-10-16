@@ -1,4 +1,6 @@
+
 function deleteSpeech(speechId) {
+  // Make a post to the delete speech route
   let c = confirm("Are you sure you want to DELETE this speech?");
   if(c) {
     fetch('/delete-speech', {
@@ -14,8 +16,9 @@ function deleteSpeech(speechId) {
 }
 
 function updateTitle(speechId) {
+  // Make a post to the update speech title route
   let new_title = prompt('Enter new title: ');
-  if(new_title.length > 1) {
+  if(new_title.trim().length > 1) {
     fetch('/update-speech-title', {
       method: 'POST',
       body: JSON.stringify({ speechId: speechId, newTitle: new_title })
@@ -27,6 +30,7 @@ function updateTitle(speechId) {
 }
 
 function loadSpeech(speechId) {
+  // Make a post to the load speech route
   fetch('/load-speech', {
     method: 'POST',
     body: JSON.stringify({ speechId: speechId })
