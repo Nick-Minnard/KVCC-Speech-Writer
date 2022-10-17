@@ -119,6 +119,9 @@ function init() {
     load_and_render();
     save_speech();
   }
+
+  // enable popovers
+  enable_popovers();
   
 }
 
@@ -224,6 +227,40 @@ function render_speech_from_template(template) {
       $(this).css("height", Math.min($(this).prop('scrollHeight'), 1000) + "px");   
     })
   })
+
+}
+
+// setup the content for each of the sidenav popovers
+function enable_popovers() {
+
+  // store data that will be used in the popovers
+  let titles = ["Save Speech", "Add Point", "Rename Point",
+    "Shift Point Up", "Shift Point Down", "Switch Sections",
+    "Cancel Action", "Delete Point", "Download Word Doc", "Site Info"
+  ]; let element_ids = ["#save-speech-option", "#add-point-option", "#rename-point-option",
+    "#shift-point-up-option", "#shift-point-down-option", "#switch-section-option",
+    "#cancel-action-option", "#delete-point-option", "#export-speech-option", "#site-info-option"
+  ]; let content = ["Your speech is saved automatically but it never hurts to do save your progress as you work.",
+    "A new point will be added directly underneath the one you select with the title you enter.",
+    "Will change the name of the point you select to what you enter.",
+    "Will, if possible, move the point a level up.", "Will, if possible, move the point a level down.",
+    "Will switch the ENTIRE section that is highlighted after you select a point with the section of the second point you select.",
+    "Will cancel any above action (besides save speech) and reset the points.",
+    "Will permanently delete the selected point, there is no undo or ctrl-z",
+    "Will download your speech in word document form.", "Will redirect you to the site info / tutorial page."
+  ];
+
+  // set the popover functionality
+  for(let i = 0; i < titles.length; i++) {
+    $(element_ids[i]).popover({
+      "delay": {
+        "show": 500,
+        "hide": 100
+      },
+      "title": titles[i],
+      "trigger": "hover"
+    });
+  }
 
 }
 

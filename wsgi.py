@@ -3,11 +3,7 @@
 
 
 
-# TODO: Ready for user testing by 10-17
-# Pop up modal box on hover of nav links
-# Personal error testing
-# Prepare presentation
-# Document entire project
+# Testing pushing reset speeches
 
 # Profile page with
 # 1. log out

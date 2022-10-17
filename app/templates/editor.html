@@ -28,16 +28,36 @@
       <div class="text-center">
         <a class="active" href="#/">KVCC Speech Writer</a>
       </div>
-      <a id="save-speech-option" href="#/"><i class="bi bi-cloud-arrow-up"></i> Save Speech <span>[Ctrl+S]</span></a><hr>
-      <a id="add-point-option" href="#/"><i class="bi bi-plus-circle"></i> Add Point <span>[Ctrl+1]</span></a><hr>
-      <a id="rename-point-option" href="#/"><i class="bi bi-pencil-square"></i> Rename Point <span>[Ctrl+2]</span></a><hr>
-      <a id="shift-point-up-option" href="#/"><i class="bi bi-arrow-up-square"></i> Shift Point Up <span>[Ctrl+3]</span></a><hr>
-      <a id="shift-point-down-option" href="#/"><i class="bi bi-arrow-down-square"></i> Shift Point Down <span>[Ctrl+4]</span></a><hr>
-      <a id="switch-section-option" href="#/"><i class="bi bi-arrow-left-right"></i> Switch Sections <span>[Ctrl+5]</span></a><hr>
-      <a id="cancel-action-option" href="#/"><i class="bi bi-x-circle"></i> Cancel Action <span>[ESC]</span></a><hr>
-      <a id="delete-point-option" href="#/"><i class="bi bi-trash"></i> Delete Point</a><hr>
-      <a href="/export-speech"><i class="bi bi-file-earmark-arrow-down"></i> Download Word Document</a><hr>
-      <a href="/site-info"><i class="bi bi-question-circle"></i> Site Info / Tutorial</a><hr>
+      <a tabindex="0" data-container="body" data-toggle="popover" data-placement="right" data-trigger="hover" title="Save Speech" 
+      data-content="Your speech is saved automatically but it never hurts to do save your progress as you work."
+      id="save-speech-option" href="#/"><i class="bi bi-cloud-arrow-up"></i> Save Speech <span>[Ctrl+S]</span></a><hr>
+      <a tabindex="0" data-container="body" data-toggle="popover" data-placement="right" data-trigger="hover" title="Add Point" 
+      data-content="A new point will be added directly underneath the one you select with the title you enter."
+      id="add-point-option" href="#/"><i class="bi bi-plus-circle"></i> Add Point <span>[Ctrl+1]</span></a><hr>
+      <a  tabindex="0" data-container="body" data-toggle="popover" data-placement="right" data-trigger="hover" title="Rename Point" 
+      data-content="Will change the name of the point you select to what you enter."
+      id="rename-point-option" href="#/"><i class="bi bi-pencil-square"></i> Rename Point <span>[Ctrl+2]</span></a><hr>
+      <a tabindex="0" data-container="body" data-toggle="popover" data-placement="right" data-trigger="hover" title="Shift Point Upt" 
+      data-content="Will, if possible, move the point a level up."
+      id="shift-point-up-option" href="#/"><i class="bi bi-arrow-up-square"></i> Shift Point Up <span>[Ctrl+3]</span></a><hr>
+      <a tabindex="0" data-container="body" data-toggle="popover" data-placement="right" data-trigger="hover" title="Shift Point Down" 
+      data-content="Will, if possible, move the point a level down."
+      id="shift-point-down-option" href="#/"><i class="bi bi-arrow-down-square"></i> Shift Point Down <span>[Ctrl+4]</span></a><hr>
+      <a tabindex="0" data-container="body" data-toggle="popover" data-placement="right" data-trigger="hover" title="Switch Sections" 
+      data-content="Will switch the ENTIRE section that is highlighted after you select a point with the section of the second point you select."
+      id="switch-section-option" href="#/"><i class="bi bi-arrow-left-right"></i> Switch Sections <span>[Ctrl+5]</span></a><hr>
+      <a tabindex="0" data-container="body" data-toggle="popover" data-placement="right" data-trigger="hover" title="Cancel Action" 
+      data-content="Will cancel any above action (besides save speech) and reset the points."
+      id="cancel-action-option" href="#/"><i class="bi bi-x-circle"></i> Cancel Action <span>[ESC]</span></a><hr>
+      <a tabindex="0" data-container="body" data-toggle="popover" data-placement="right" data-trigger="hover" title="Delete Point" 
+      data-content="Will permanently delete the selected point, there is no undo or ctrl-z"
+      id="delete-point-option" href="#/"><i class="bi bi-trash"></i> Delete Point</a><hr>
+      <a tabindex="0" data-container="body" data-toggle="popover" data-placement="right" data-trigger="hover" title="Download Word Doc" 
+      data-content="Will download your speech in word document form."
+      id="export-speech-option" href="/export-speech"><i class="bi bi-file-earmark-arrow-down"></i> Download Word Document</a><hr>
+      <a tabindex="0" data-container="body" data-toggle="popover" data-placement="right" data-trigger="hover" title="Site Info" 
+      data-content="Will redirect you to the site info / tutorial page."
+      id="site-info-option" href="/site-info"><i class="bi bi-question-circle"></i> Site Info / Tutorial</a><hr>
     </div>
 
     <div class="content">
@@ -70,10 +90,10 @@
       crossorigin="anonymous"
     ></script>
     <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-      crossorigin="anonymous"
-    ></script>
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js"
+      integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+      crossorigin="anonymous">
+    </script>
     <script
       src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
       integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
