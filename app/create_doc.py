@@ -1,6 +1,5 @@
 from docx import Document
 from docx.shared import RGBColor, Pt
-from haggis.files.docx import list_number
 
 def create_speech_doc(speech):
   """Create speech document function"""
