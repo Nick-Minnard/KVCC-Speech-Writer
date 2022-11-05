@@ -8,7 +8,7 @@ Nick Minnard
 #### 0. Install python
 https://www.python.org/downloads/
 
-#### 1. Clone the repo / download the project
+#### 1. Clone the repo / download and unzip the project
 
 #### 2. Navigate to the project directory
 `cd .../KVCC-Speech-Writer/`
@@ -20,4 +20,8 @@ https://www.python.org/downloads/
 #### 4. Install the requirements
 `python -m pip install -r requirements.txt`
 
-#### 5. Run the local server
+#### 5. Run the server
+`python wsgi.py`
+
+#### 6. Navigate to the link displayed in the terminal
+"Running on <link>"
